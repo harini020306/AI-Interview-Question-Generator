@@ -2,7 +2,6 @@ from google import genai
 from dotenv import load_dotenv
 import os
 import json
-import time
 
 
 # --------------------------------------------------
@@ -30,7 +29,7 @@ def evaluate_answer(
     job_role,
     skills
 ):
-    """Evaluate candidate answer using Gemini."""
+    """Evaluate a candidate's answer using Gemini."""
 
     client = genai.Client(
         api_key=api_key
@@ -39,11 +38,11 @@ def evaluate_answer(
     skills_text = ", ".join(skills)
 
     prompt = f"""
-You are an expert interviewer.
+You are an expert technical interviewer.
 
 Evaluate the candidate's answer objectively.
 
-Candidate:
+Candidate Information:
 Job Role: {job_role}
 Skills: {skills_text}
 
@@ -53,7 +52,7 @@ Interview Question:
 Candidate Answer:
 {answer}
 
-Evaluate based on:
+Evaluate the answer based on:
 
 1. Technical correctness
 2. Relevance
@@ -65,7 +64,11 @@ Give a score from 0 to 10.
 
 Return ONLY valid JSON.
 
-Format:
+Do NOT use Markdown.
+Do NOT add ```json.
+Do NOT add ```.
+
+Return exactly this format:
 
 {{
     "score": 7,
@@ -77,91 +80,58 @@ Format:
         "Improvement 1",
         "Improvement 2"
     ],
-    "better_answer": "Improved answer"
+    "better_answer": "A better version of the answer."
 }}
 """
 
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=prompt
+    )
+
+    response_text = response.text.strip()
+
+
     # --------------------------------------------------
-    # Try Gemini up to 3 times
+    # Remove Markdown code fences if Gemini adds them
     # --------------------------------------------------
 
-    for attempt in range(3):
+    if response_text.startswith("```json"):
+        response_text = response_text[7:]
 
-        try:
+    elif response_text.startswith("```"):
+        response_text = response_text[3:]
 
-            interaction = client.interactions.create(
-                model="gemini-3.6-flash",
-                input=prompt
-            )
+    if response_text.endswith("```"):
+        response_text = response_text[:-3]
 
-            response_text = interaction.output_text.strip()
+    response_text = response_text.strip()
 
-            # Remove Markdown if Gemini adds it
-            if response_text.startswith("```json"):
-                response_text = response_text[7:]
 
-            elif response_text.startswith("```"):
-                response_text = response_text[3:]
+    # --------------------------------------------------
+    # Convert JSON
+    # --------------------------------------------------
 
-            if response_text.endswith("```"):
-                response_text = response_text[:-3]
+    evaluation = json.loads(response_text)
 
-            response_text = response_text.strip()
 
-            # Convert JSON
-            evaluation = json.loads(
-                response_text
-            )
+    # --------------------------------------------------
+    # Validate Score
+    # --------------------------------------------------
 
-            # Validate score
-            score = evaluation.get("score")
+    score = evaluation.get("score")
 
-            if not isinstance(
-                score,
-                (int, float)
-            ):
-                raise ValueError(
-                    "Invalid score returned by Gemini."
-                )
+    if not isinstance(score, (int, float)):
+        raise ValueError(
+            "Invalid score returned by Gemini."
+        )
 
-            evaluation["score"] = max(
-                0,
-                min(10, float(score))
-            )
+    score = max(0, min(10, float(score)))
 
-            return evaluation
+    evaluation["score"] = score
 
-        except Exception as e:
 
-            error_text = str(e)
-
-            # Retry only for temporary server problems
-            if "503" in error_text:
-
-                if attempt < 2:
-
-                    print(
-                        f"⚠️ Gemini temporarily unavailable."
-                    )
-
-                    print(
-                        f"Retrying in {10 * (attempt + 1)} seconds..."
-                    )
-
-                    time.sleep(
-                        10 * (attempt + 1)
-                    )
-
-                else:
-
-                    raise RuntimeError(
-                        "Gemini is temporarily unavailable "
-                        "after 3 attempts. Please try again later."
-                    )
-
-            else:
-
-                raise e
+    return evaluation
 
 
 # --------------------------------------------------
@@ -171,8 +141,8 @@ Format:
 if __name__ == "__main__":
 
     question = (
-        "What is the difference between a "
-        "list and a tuple in Python?"
+        "What is the difference between a list "
+        "and a tuple in Python?"
     )
 
     answer = (
