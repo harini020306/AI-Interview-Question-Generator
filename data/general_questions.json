@@ -1,0 +1,79 @@
+{
+    "HR": {
+        "Easy": [
+            "Tell me about yourself.",
+            "What are your strengths?",
+            "What are your weaknesses?",
+            "Why should we hire you?",
+            "Why do you want to join our company?",
+            "Where do you see yourself in five years?",
+            "What motivates you?",
+            "How do you handle pressure?",
+            "What are your career goals?",
+            "Why did you choose your engineering field?"
+        ],
+        "Medium": [
+            "Tell me about a challenging project you worked on.",
+            "Describe a situation where you solved a difficult problem.",
+            "How do you handle conflicts with team members?",
+            "Describe a time when you made a mistake and learned from it.",
+            "How do you prioritize multiple tasks?",
+            "Tell me about a time you demonstrated leadership.",
+            "How do you handle criticism?",
+            "Describe your experience working in a team.",
+            "What would you do if you disagreed with your manager?",
+            "How do you handle failure?"
+        ],
+        "Hard": [
+            "Tell me about a time you failed and how you recovered.",
+            "Describe a situation where you had to make a difficult decision.",
+            "How would you handle an ethical dilemma at work?",
+            "Describe a situation where you convinced someone to accept your idea.",
+            "How would you handle a team member who consistently misses deadlines?",
+            "Tell me about a time you worked under extreme pressure.",
+            "How would you respond if you received negative feedback from your manager?",
+            "Describe a situation where you had to adapt to unexpected changes.",
+            "What would you do if you disagreed with a major company decision?",
+            "Describe your biggest professional learning experience."
+        ]
+    },
+
+    "Aptitude": {
+        "Easy": [
+            "What is the next number in the sequence 2, 4, 6, 8, ?",
+            "If a train travels 60 km in 2 hours, what is its speed?",
+            "What is 25% of 200?",
+            "If 5 pens cost 50 rupees, what is the cost of one pen?",
+            "What is the average of 10 and 20?",
+            "If a number is doubled and becomes 40, what is the number?",
+            "What is the square of 12?",
+            "What is the value of 15 + 25?",
+            "If a shirt costs 1000 rupees and has a 10% discount, what is the final price?",
+            "What is the next number: 5, 10, 15, 20, ?"
+        ],
+        "Medium": [
+            "A person travels at 40 km/h for 3 hours. What distance does the person cover?",
+            "A train travels 120 km in 2 hours. What is its average speed?",
+            "If 20% of a number is 50, what is the number?",
+            "A product costs 800 rupees and is sold for 960 rupees. What is the profit percentage?",
+            "Find the average of 15, 20, 25, 30 and 35.",
+            "A can complete a work in 10 days. How much work does A complete in one day?",
+            "If the ratio of boys to girls is 3:2 and there are 30 boys, how many girls are there?",
+            "A train 200 meters long crosses a pole in 10 seconds. Find its speed.",
+            "If the simple interest on 5000 rupees for 2 years is 1000 rupees, find the rate.",
+            "A shop gives a 20% discount on an item priced at 1500 rupees. Find the selling price."
+        ],
+        "Hard": [
+            "A can complete a task in 12 days and B in 18 days. How many days will they take together?",
+            "A train moving at 60 km/h crosses a platform in 30 seconds. If the train is 300 meters long, find the platform length.",
+            "A mixture contains milk and water in the ratio 5:3. If 16 liters of water are added, the ratio becomes 5:4. Find the original quantity of milk.",
+            "A man invests 20,000 rupees at 8% compound interest annually. Find the amount after 2 years.",
+            "Two trains travel in opposite directions at 60 km/h and 90 km/h. Find their relative speed.",
+            "A boat travels downstream at 18 km/h and upstream at 10 km/h. Find the speed of the boat in still water.",
+            "A and B can complete a job in 15 and 20 days respectively. Find the time required when working together.",
+            "A number is increased by 20% and then decreased by 20%. Find the overall percentage change.",
+            "If the probability of an event is 0.25, what is the probability that the event does not occur?",
+            "A person travels half the distance at 40 km/h and the other half at 60 km/h. Find the average speed."
+        ]
+    }
+}

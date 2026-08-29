@@ -1,0 +1,131 @@
+````python
+from google import genai
+from dotenv import load_dotenv
+import os
+import json
+
+
+# Load environment variables
+load_dotenv()
+
+api_key = os.getenv("GEMINI_API_KEY")
+
+if not api_key:
+    raise ValueError(
+        "GEMINI_API_KEY not found. "
+        "Check your .env file."
+    )
+
+
+def generate_ai_questions(
+    job_role,
+    skills,
+    interview_type,
+    difficulty,
+    number_of_questions
+):
+    """Generate interview questions using Gemini."""
+
+    # IMPORTANT: pass the API key here
+    client = genai.Client(
+        api_key=api_key
+    )
+
+    skills_text = ", ".join(skills)
+
+    prompt = f"""
+You are an expert interviewer.
+
+Generate exactly {number_of_questions} interview questions.
+
+Candidate Information:
+Job Role: {job_role}
+Skills: {skills_text}
+Interview Type: {interview_type}
+Difficulty: {difficulty}
+
+Rules:
+
+1. Generate exactly {number_of_questions} questions.
+2. Questions must match the job role.
+3. Questions must be related to the candidate's skills.
+4. Match the requested difficulty.
+5. Technical interviews should contain technical questions.
+6. Coding interviews should contain programming questions.
+7. HR interviews should contain behavioral questions.
+8. Aptitude interviews should contain quantitative or logical reasoning questions.
+9. Do NOT provide answers.
+10. Return ONLY valid JSON.
+11. Do NOT use Markdown.
+12. Do NOT add ```json or ```.
+
+Return exactly this format:
+
+[
+    {{
+        "question": "Question 1"
+    }},
+    {{
+        "question": "Question 2"
+    }}
+]
+"""
+
+    response = client.models.generate_content(
+        model="gemini-3.6-flash",
+        contents=prompt
+    )
+
+    response_text = response.text.strip()
+
+    # Remove Markdown code fences if Gemini adds them
+    if response_text.startswith("```json"):
+        response_text = response_text[7:]
+
+    elif response_text.startswith("```"):
+        response_text = response_text[3:]
+
+    if response_text.endswith("```"):
+        response_text = response_text[:-3]
+
+    response_text = response_text.strip()
+
+    # Convert JSON response
+    questions_data = json.loads(response_text)
+
+    questions = [
+        item["question"]
+        for item in questions_data
+        if "question" in item
+    ]
+
+    # Verify question count
+    if len(questions) != number_of_questions:
+        raise ValueError(
+            f"Expected {number_of_questions} questions, "
+            f"but Gemini returned {len(questions)}."
+        )
+
+    return questions
+
+
+# Test
+if __name__ == "__main__":
+
+    questions = generate_ai_questions(
+        "Python Developer",
+        ["Python", "SQL"],
+        "Technical",
+        "Medium",
+        10
+    )
+
+    print("\n🤖 Generated Interview Questions:\n")
+
+    for index, question in enumerate(
+        questions,
+        start=1
+    ):
+        print(f"{index}. {question}")
+````
+
