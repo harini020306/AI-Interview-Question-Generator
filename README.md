@@ -276,7 +276,7 @@ GEMINI_API_KEY=your_api_key_here
 
 B.E. Electronics and Communication Engineering
 
-Interested in **Artificial Intelligence, Machine Learning, Python, IoT, and Embedded Systems**.
+Interested in **Artificial Intelligence, Machine Learning, Python, IoT, and Embedded Systems**
 
 ---
 
